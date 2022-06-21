@@ -1,0 +1,28 @@
+{
+    "events" : [
+        {
+            "id": "1",
+            "name": "Throwback Thursday with DJ Manny Duke",
+            "slug": "throwback-thursday-with-dj-manny-duke",
+            "venue": "Horizon Club",
+            "address": "919 3rd Ave New York, New York (NY), 10022",
+            "performers": "dj Manny Duke",
+            "Date": "June 09, 2021",
+            "time": "10:10 PM EST",
+            "description": "Featuring deep cuts, party anthems and remixes nostalgic songs from two of the best decades of music with the very best music from the 90's and 2000's",
+            "image": "/images/sample/event1.jpg"
+        },        
+        {
+            "id": "1",
+            "name": "Smooth Monday with DJ Manny Duke",
+            "slug": "smooth-monday-with-dj-manny-duke",
+            "venue": "Horizon Club",
+            "address": "919 3rd Ave New York, New York (NY), 10022",
+            "performers": "dj Manny Duke",
+            "Date": "June 09, 2021",
+            "time": "10:10 PM EST",
+            "description": "Featuring deep cuts, party anthems and remixes nostalgic songs from two of the best decades of music with the very best music from the 90's and 2000's",
+            "image": "/images/sample/event2.jpg"
+        }
+    ]
+}
