@@ -4,16 +4,19 @@ import Link from 'next/link'
 import { API_URL } from '@/config/index'
 
 export default function HomePage({events}) {
+  const eventArr = events.data
+
   return (
     <Layout>
       <h1>Upcoming Events</h1>
-      {events.length === 0 ? <h3>No events to show</h3> : <></>}
+      {eventArr.length === 0 ? <h3>No event to show</h3> : <></>}
       
-      {events.map((evt) => (
-        <EventItem key={evt.id} evt={evt} />
+      {eventArr.map((evt) => (
+        //Needs to be destructured.
+        <EventItem key={evt.id} evt={evt.attributes} />
       ))}
 
-      {events.length > 0 && (
+      {eventArr.length > 0 && (
         <Link href="/events" >
           <a className='btn-secondary'>View All Events</a>
         </Link>
@@ -23,11 +26,11 @@ export default function HomePage({events}) {
 }
 
 export async function getStaticProps() {
-  const res = await fetch(`${API_URL}/api/events`)
+  const res = await fetch(`${API_URL}/api/events?populate=*&_sort=date:asc&_limit=3`)
   const events = await res.json()
 
   return {
-    props: { events: events.slice(0, 3)},
+    props: { events },
     revalidate: 1, //revalidate every 1 second if data is changed
   }
 }

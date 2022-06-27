@@ -5,10 +5,11 @@ import Image from 'next/image'
 import { API_URL } from '@/config/index'
 import styles from "@/styles/Event.module.css"
 
-export default function EventPage({evt}) {
+export default function EventPage({ evt }) {
   const deleteEvent = (e) => {
     console.log('delete')
   }
+  // console.log(evt.image.data.attributes.formats)
 
   return (
     <Layout>
@@ -25,12 +26,12 @@ export default function EventPage({evt}) {
         </div>
 
         <span>
-          {evt.date} at {evt.time}
+          {new Date(evt.date).toLocaleDateString('en-US')} at {evt.time}
         </span>
         <h1>{evt.name}</h1>
-        {evt.image && (
+        {evt.image.data.attributes.formats.medium && (
           <div className={styles.image}>
-            <Image src={evt.image} width={960} height={600}/>
+            <Image src={evt.image.data.attributes.formats.medium.url} width={960} height={600}/>
           </div>
         )}
 
@@ -53,9 +54,10 @@ export default function EventPage({evt}) {
 export async function getStaticPaths(){
   const res = await fetch(`${API_URL}/api/events`)
   const events = await res.json()
+  // const events = JSON.stringify(res)
 
-  const paths = events.map(evt => ({
-    params: {slug: evt.slug}
+  const paths = events.data.map(evt => ({
+    params: {slug: evt.attributes.slug}
   }))
 
   return {
@@ -66,12 +68,12 @@ export async function getStaticPaths(){
 
 // Fetches at build time but needs getStaticPaths
 export async function getStaticProps( {params: { slug } } ){
-  const res = await fetch(`${API_URL}/api/events/${slug}`)
+  const res = await fetch(`${API_URL}/api/events?filters[slug]=${slug}&populate=*`)
   const events = await res.json()
 
   return {
     props: {
-      evt: events[0]
+      evt: events.data[0].attributes
     },
     revalidate: 1
   }
