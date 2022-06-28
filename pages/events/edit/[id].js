@@ -7,6 +7,8 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image';
 import Layout from '@/components/Layout'
+import Modal from '@/components/Modal';
+import ImageUpload from '@/components/ImageUpload';
 import { API_URL } from '@/config/index'
 import styles from '@/styles/Form.module.css'
 
@@ -14,7 +16,7 @@ export default function EditEventPage({ evt }) {
   const attributes = evt.data.attributes;
   const imageData = attributes.image.data ? attributes.image.data.attributes : null ;
 
-  // console.log(evt)
+  const evtId = evt.data.id;
 
   const [values, setValues] = useState({
     name: attributes.name,
@@ -25,6 +27,8 @@ export default function EditEventPage({ evt }) {
     time: attributes.time,
     description: attributes.description,
   })
+
+  const [showModal, setShowModal] = useState(false)
 
   const [imagePreview, setImagePreview] = useState(
     imageData ? imageData.formats.thumbnail.url : null
@@ -44,7 +48,7 @@ export default function EditEventPage({ evt }) {
       toast.error("Please Fill in all fields")
     }
 
-    const res = await fetch(`${API_URL}/api/events/${evt.data.id}`, {
+    const res = await fetch(`${API_URL}/api/events/${evtId}?populate=*`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -58,13 +62,21 @@ export default function EditEventPage({ evt }) {
     } else {
       const evt = await res.json()
       // router.push(`/`)
-      toast.success("Event Published!")
+      toast.success("Event Updated!")
     }
   }
 
   const handleInputChange = (e) => {
     const {name, value} = e.target
     setValues({...values, [name]: value})
+  }
+
+  const imageUploaded = async (e) => {
+    const res = await fetch(`${API_URL}/api/events/${evtId}?populate=*`)
+    const evt = await res.json()
+    // console.log(evt)
+    setImagePreview(evt.data.attributes.image.data.attributes.formats.thumbnail.url)
+    setShowModal(false)
   }
 
   return (
@@ -119,10 +131,14 @@ export default function EditEventPage({ evt }) {
         }
 
         <div>
-          <button className='btn-secondary'>
+          <button onClick={() => setShowModal(true) } className='btn-secondary'>
             <FaImage /> Set Image
           </button>
         </div>
+
+        <Modal show={showModal} onClose={() => setShowModal(false)}>
+          <ImageUpload evtId={evtId}  imageUploaded={imageUploaded}/>
+        </Modal>
     </Layout>
   )
 }

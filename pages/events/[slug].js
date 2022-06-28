@@ -45,9 +45,9 @@ export default function EventPage({ evt }) {
         <span>
           {new Date(evt.attributes.date).toLocaleDateString('en-US')} at {evt.attributes.time}
         </span>
-        <h1>{evt.name}</h1>
+        <h1>{evt.attributes.name}</h1>
         <ToastContainer />
-        {evt.attributes.data && evt.attributes.image.data && evt.image.data.attributes.formats.medium && (
+        {evt.attributes.image.data && evt.attributes.image.data.attributes.formats.medium && (
           <div className={styles.image}>
             <Image src={evt.attributes.image.data.attributes.formats.medium.url} width={960} height={600}/>
           </div>
